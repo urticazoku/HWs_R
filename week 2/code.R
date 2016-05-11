@@ -43,3 +43,9 @@ install.packages("gapminder")
 library(gapminder)
 data(gapminder)
 head(gapminder)
+
+x<-gapminder %>% filter(year==1952)
+x<-x$lifeExp
+a<-mean(x<=40)
+b<-mean(x<=60)
+b-a
