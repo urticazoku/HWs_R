@@ -99,3 +99,55 @@ qqnorm(avgs)
 qqline(avgs)
 mean(avgs)
 popsd(avgs)
+
+#################################
+x<-unlist(read.csv("femaleControlsPopulation.csv"))
+
+n<-10000
+nulls<-vector("numeric",n)
+for(i in 1:n){
+  control<-sample(x,3)
+  treatment<sample(x,3)
+  nulls[i]<-mean(treatment)-mean(control)
+}
+
+library(rafalib)
+mypar()
+qqnorm(nulls)
+qqline(nulls)
+#################################
+library(dplyr)
+dat<-read.csv("femaleMiceWeights.csv")
+control<-filter(dat,Diet=="chow") %>% select(Bodyweight) %>% unlist
+X<-control
+treatment<-filter(dat, Diet=="hf") %>% select(Bodyweight) %>% unlist
+Y<-treatment
+
+SE<-sqrt(((sd(treatment))^2)/12+((sd(control))^2)/12)
+SE
+
+ttest<-t.test(treatment,control)
+ttest
+
+Z <- ( mean(Y) - mean(X) ) / sqrt( var(X)/12 + var(Y)/12)
+2*( 1-pnorm(Z)) 
+
+qqnorm(control)
+qqline(control)
+qqnorm(treatment)
+qqline(treatment)
+#################################
+
+set.seed(1)
+#n <- 100
+n<-100
+sides <- 6
+#p <- 1/sides
+p<-0.01
+zs <- replicate(10000,{
+  x <- sample(1:sides,n,replace=TRUE)
+  (mean(x==6) - p) / sqrt(p*(1-p)/n)
+}) 
+qqnorm(zs)
+abline(0,1)#confirm it's well approximated with normal distribution
+mean(abs(zs) > 2)
