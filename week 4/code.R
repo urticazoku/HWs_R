@@ -60,3 +60,45 @@ boxplot(0,cor(nym.2002$age,nym.2002$time))
 time = sort(nym.2002$time)
 max(time/median(time))
 min(time/median(time))
+###########
+
+data(ChickWeight)
+head(ChickWeight)
+plot( ChickWeight$Time, ChickWeight$weight, col=ChickWeight$Diet)
+chick = reshape(ChickWeight, idvar=c("Chick","Diet"), timevar="Time",
+                direction="wide")
+head(chick)
+chick = na.omit(chick)
+
+old_c<-chick[,5]
+c<-old_c
+c<-append(c,3000)
+mean(c)/mean(old_c)
+median(c)/median(old_c)
+sd(c)/sd(old_c)
+mad(c)/mad(old_c)
+old_c21<-chick[,14]
+
+plot(old_c,old_c21)
+
+c21<-old_c21
+c21<-append(c21,3000)
+cor(c,c21)/cor(old_c,old_c21)
+
+spl<-split(chick,chick$Diet)
+x<-spl$`1`[,5]
+y<-spl$`4`[,5]
+t.test(x,y)
+wilcox.test(x,y)
+x<-append(x,200)
+t.test(x,y)$p.value
+wilcox.test(x,y)
+
+library(rafalib)
+mypar(1,3)
+boxplot(x,y)
+boxplot(x,y+10)
+boxplot(x,y+100)
+t.test(x,y+10)$statistic-t.test(x,y+100)$statistic
+wilcox.test(c(1,2,3),c(4,5,6))
+wilcox.test(c(1,2,3),c(400,500,600))
