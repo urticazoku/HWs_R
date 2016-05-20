@@ -91,3 +91,38 @@ set.seed(1)
 
 r<-replicate(10000,f())
 sd(r)
+#########################
+library(UsingR)
+x = father.son$fheight
+y = father.son$sheight
+n = length(y)
+N <-  50
+set.seed(1)
+mean( (y - mean(y))*(x-mean(x) ) )
+
+index = sample(n,N)
+sampledat = father.son[index,]
+x = sampledat$fheight
+y = sampledat$sheight
+
+betahat =  lm(y~x)$coef
+return(betahat[2])
+
+#r<-replicate(10000,f())
+#sd(r)
+
+fit <- lm(y ~ x)
+Yhat<-fit$fitted.values
+sum((y - fit$fitted.values)^2)
+
+X <- cbind(rep(1,N), x)
+
+N <- nrow(X)
+p <- ncol(X)
+
+XtXinv <- solve(crossprod(X))
+
+resid <- y - X %*% XtXinv %*% crossprod(X,y)
+
+s <- sqrt( sum(resid^2)/(N-p))
+ses <- sqrt(diag(XtXinv))*s 
