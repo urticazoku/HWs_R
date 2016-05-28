@@ -24,3 +24,24 @@ pvals <- matrix(runif(B*m,0,1),B,m)
 k <- 1-(1-alpha)^(1/m)
 mistakes <- rowSums(pvals<k) 
 mean(mistakes>0)
+#######################
+library(devtools)
+library(rafalib)
+install_github("genomicsclass/GSE5859Subset")
+install_bioc("genefilter")
+install_bioc("qvalue")
+library(GSE5859Subset)
+data(GSE5859Subset)
+library(genefilter)
+?rowttests
+View(sampleInfo)
+View(geneExpression)
+View(geneAnnotation)
+g <- factor(sampleInfo$group)
+pvals = rowttests(geneExpression,g)$p.value
+sum(pvals<0.05)
+k = 0.05/length(pvals)
+sum(pvals<k)
+
+calls <- p.adjust(pvals,method="fdr") < 0.05
+sum(calls)
